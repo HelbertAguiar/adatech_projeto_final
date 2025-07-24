@@ -1,0 +1,15 @@
+{
+  "contatos": [
+    {
+      "id": "12af",
+      "nome": "Ana Silva",
+      "telefone": "(11) 99999-1234",
+      "email": "ana.silva@email.com"
+    },
+    {
+      "id": "66a8",
+      "nome": "Bruno Souza",
+      "telefone": "(21) 88888-4321"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+
+.titulo {
+  padding: 5rem 0;
+  font-size: 5rem;
+  text-align: center;
+  color: rgb(221, 221, 221);
+}
+
+.lista-contatos {
+  padding: 2rem 0;
+
+  h2 {
+    padding: 3rem 1rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+.divider {
+  width: 65%;
+  margin: 2rem auto;
+  border: none;
+  border-top: 2px dashed #e4e4e4;
+  opacity: 0.7;
+}

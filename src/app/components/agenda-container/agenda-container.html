@@ -1,0 +1,16 @@
+<h1 class="titulo">Agenda de contatos</h1>
+
+<div class="agenda-form">
+  <app-agenda-form
+    (criarContato)="onAdicionarContato($event)"
+    [resetarForm]="resetarForm()"
+  />
+</div>
+
+<div class="lista-contatos" *ngIf="contatos()">
+  <h2 >Contatos</h2>
+  <div class="contato" *ngFor="let contato of contatos(); let i = index">
+    <app-agenda-contato [contato]="contato" />
+    <hr *ngIf="i < contatos()!.length - 1" class="divider" />
+  </div>
+</div>
