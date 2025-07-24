@@ -12,6 +12,8 @@ import { AgendaContato } from './components/agenda-contato/agenda-contato';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr'
 
 @NgModule({
   declarations: [App, AgendaContainer, AgendaForm, AgendaContato],
@@ -23,6 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot() // ToastrModule added      
   ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
