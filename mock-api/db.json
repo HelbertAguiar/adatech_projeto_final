@@ -2,32 +2,21 @@
   "contatos": [
     {
       "id": "12af",
-      "nome": "Ana Silva",
+      "nome": "Ana Silva - atualizado",
       "telefone": "(11) 99999-1234",
       "email": "ana.silva@email.com"
     },
     {
-      "id": "66a8",
-      "nome": "Bruno Souza",
-      "telefone": "(21) 88888-4321"
+      "id": "d6c3",
+      "nome": "Ana Silva - atualizado!",
+      "telefone": "(11) 99999-1234",
+      "email": "ana.silva@email.com"
     },
     {
-      "id": "890c",
-      "nome": "Teste",
-      "telefone": "8599999999",
-      "email": "teste@teste.com"
-    },
-    {
-      "id": "d152",
-      "nome": "teste 2",
-      "telefone": "8567777777",
-      "email": "teste2@teste 2"
-    },
-    {
-      "id": "436b",
-      "nome": "teste 3",
-      "telefone": "86999999999",
-      "email": "teste3@teste.com"
+      "id": "09a0",
+      "nome": "Marcio Pereira",
+      "telefone": "(84) 85850-8585",
+      "email": "marcio@email.com"
     }
   ]
 }

@@ -1,5 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { Contato } from '../../interfaces/agenda.interfaces';
+import {
+  Component,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { ContatoResponse } from '../../interfaces/agenda.interfaces';
 import { AgendaService } from '../../services/agenda-service';
 
 @Component({
@@ -11,21 +17,53 @@ import { AgendaService } from '../../services/agenda-service';
 export class AgendaContainer {
   private readonly agendaService = inject(AgendaService);
 
-  contatos = this.agendaService.contatos;
-  resetarForm = signal<boolean>(false);
+  @ViewChild('form') form!: ElementRef<HTMLDivElement>;
 
-  onAdicionarContato(novoContato: Contato) {
+  contatos = this.agendaService.contatos;
+  contatoParaEditarSignal = signal<ContatoResponse | null>(null);
+
+  resetarForm = signal<boolean>(false);
+  editMode = signal<boolean>(false);
+
+  onAdicionarContato(novoContato: ContatoResponse) {
     this.agendaService.addContato(novoContato).subscribe({
       next: (_) => {
         this.agendaService.refreshDados();
         this.resetarForm.set(true);
-        console.log(this.resetarForm());
         setTimeout(() => {
           this.resetarForm.set(false);
-          console.log(this.resetarForm());
         }, 200);
-        console.log(this.resetarForm());
       },
     });
+  }
+
+  onExcluirContato(id: string) {
+    this.agendaService.deleteContato(id).subscribe({
+      next: (_) => this.agendaService.refreshDados(),
+    });
+  }
+
+  onEditarContato(contato: ContatoResponse) {
+    this.contatoParaEditarSignal.set(contato);
+
+    setTimeout(() => {
+      this.form.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+  }
+
+  onConfirmarEdicao(contato: ContatoResponse) {
+    this.agendaService.updateContato(contato).subscribe({
+      next: (_) => {
+        this.contatoParaEditarSignal.set(null);
+        this.agendaService.refreshDados();
+      },
+    });
+  }
+
+  onCancelarEdicao() {
+    this.contatoParaEditarSignal.set(null);
   }
 }

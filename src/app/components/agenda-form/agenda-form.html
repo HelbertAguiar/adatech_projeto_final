@@ -2,6 +2,9 @@
   <mat-form-field appearance="outline">
     <mat-label>Nome</mat-label>
     <input matInput type="text" formControlName="nome" />
+    @if (contatoForm.controls.nome.hasError('required')) {
+    <mat-error>É necessário informar um nome</mat-error>
+    }
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Telefone</mat-label>
@@ -13,9 +16,13 @@
   </mat-form-field>
 
   <div class="mat-form-actions">
-    <button matButton="elevated" type="submit" (click)="adicionarContato()">
-      Adicionar
+    <button
+      matButton="elevated"
+      type="submit"
+      (click)="contatoSignal() ? confirmarEditar() : adicionarContato()"
+    >
+      {{ contatoSignal() ? 'Editar' : 'Adicionar'}}
     </button>
-    <button matButton="elevated" type="reset">Cancelar</button>
+    <button matButton="elevated" (click)="cancelarEditar()">Cancelar</button>
   </div>
 </form>

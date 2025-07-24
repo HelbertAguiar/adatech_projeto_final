@@ -10,9 +10,9 @@ import { ToastrService } from 'ngx-toastr';
 export class AgendaService {
   private httpClient = inject(HttpClient);
 
-  private readonly urlApi = 'http://localhost:3000';
+  private readonly urlApi = 'http://localhost:3000/contatos';
 
-  private _contatos = signal<ContatoResponse[] | null>(null);
+  private _contatos = signal<ContatoResponse[]>([]);
   public contatos = this._contatos.asReadonly();
 
   constructor(private toastr: ToastrService) {
@@ -21,7 +21,7 @@ export class AgendaService {
 
   private getContatos(): Observable<ContatoResponse[]> {
     return this.httpClient
-      .get<ContatoResponse[]>(`${this.urlApi}/contatos`)
+      .get<ContatoResponse[]>(`${this.urlApi}`)
       .pipe(tap((res) => this._contatos.set(res)));
   }
 
@@ -30,21 +30,48 @@ export class AgendaService {
   }
 
   public addContato(novoContato: Contato): Observable<Contato> {
-
     const status_add = this.httpClient.post<Contato>(
-      `${this.urlApi}/contatos`,
+      `${this.urlApi}`,
       novoContato
     );
 
     if (status_add) {
       this.toastr.success('Contato adicionado com sucesso!', 'Parabéns', {
-        timeOut: 3000, progressBar: true, progressAnimation: "decreasing"
+        timeOut: 3000,
+        progressBar: true,
+        progressAnimation: 'decreasing',
       });
     } else {
-      this.toastr.error('Não foi possivel incluir tarefa. Tente mais tarde!', 'Atenção', {
-        timeOut: 3000, progressBar: true, progressAnimation: "decreasing"
-      });
+      this.toastr.error(
+        'Não foi possivel incluir tarefa. Tente mais tarde!',
+        'Atenção',
+        {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        }
+      );
     }
     return status_add;
+  }
+
+  public deleteContato(id: string) {
+    return this.httpClient.delete(`${this.urlApi}/${id}`);
+  }
+
+  public updateContato(contatoAEditar: ContatoResponse) {
+    return this.httpClient
+      .put<ContatoResponse>(
+        `${this.urlApi}/${contatoAEditar.id}`,
+        contatoAEditar
+      )
+      .pipe(
+        tap((contatoAEditar) => {
+          const next = this._contatos()?.map((contato) =>
+            contato.id === contatoAEditar.id ? contatoAEditar : contato
+          );
+          this._contatos.set(next);
+        })
+      );
   }
 }

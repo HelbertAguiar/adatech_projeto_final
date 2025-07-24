@@ -1,7 +1,19 @@
-
-
 <div class="contato">
-  <p><span class="chave-campo">Nome</span>: {{contato.nome}}</p>
-  <p *ngIf="contato.telefone"><span class="chave-campo">Telefone</span>: {{contato.telefone}}</p>
-  <p *ngIf="contato.email"><span class="chave-campo">E-mail</span>: {{contato.email}}</p>
+  <div class="contato-info">
+    <p><span class="chave-campo">Nome</span>: {{contato.nome}}</p>
+    <p *ngIf="contato.telefone">
+      <span class="chave-campo">Telefone</span>: {{contato.telefone}}
+    </p>
+    <p *ngIf="contato.email">
+      <span class="chave-campo">E-mail</span>: {{contato.email}}
+    </p>
+  </div>
+  <div class="contato-actions">
+    <button matButton="elevated" (click)="editarContato.emit(contato)">
+      Editar
+    </button>
+    <button matButton="elevated" (click)="excluirContato.emit(contato.id)">
+      Excluir
+    </button>
+  </div>
 </div>

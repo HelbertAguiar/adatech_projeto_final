@@ -1,16 +1,23 @@
 <h1 class="titulo">Agenda de contatos</h1>
 
-<div class="agenda-form">
+<div class="agenda-form" #form>
   <app-agenda-form
     (criarContato)="onAdicionarContato($event)"
     [resetarForm]="resetarForm()"
+    [contatoSignal]="contatoParaEditarSignal"
+    (cancelarEdicao)="onCancelarEdicao()"
+    (confirmarEdicao)="onConfirmarEdicao($event)"
   />
 </div>
 
 <div class="lista-contatos" *ngIf="contatos()">
-  <h2 >Contatos</h2>
+  <h2>Contatos</h2>
   <div class="contato" *ngFor="let contato of contatos(); let i = index">
-    <app-agenda-contato [contato]="contato" />
+    <app-agenda-contato
+      [contato]="contato"
+      (excluirContato)="onExcluirContato($event)"
+      (editarContato)="onEditarContato($event)"
+    />
     <hr *ngIf="i < contatos()!.length - 1" class="divider" />
   </div>
 </div>

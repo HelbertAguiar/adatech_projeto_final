@@ -5,7 +5,7 @@ export interface Contato {
 }
 
 export interface ContatoResponse {
-  id: string;
+  id?: string;
   nome: string;
   telefone?: string | null;
   email?: string | null;
