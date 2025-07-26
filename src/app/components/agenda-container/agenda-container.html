@@ -10,14 +10,24 @@
   />
 </div>
 
-<div class="lista-contatos" *ngIf="contatos()">
+<div class="lista-contatos">
   <h2>Contatos</h2>
-  <div class="contato" *ngFor="let contato of contatos(); let i = index">
-    <app-agenda-contato
-      [contato]="contato"
-      (excluirContato)="onExcluirContato($event)"
-      (editarContato)="onEditarContato($event)"
-    />
-    <hr *ngIf="i < contatos()!.length - 1" class="divider" />
+  <div class="filtro">
+    <mat-form-field>
+      <mat-label>Buscar Contado</mat-label>
+      <input matInput type="text" [(ngModel)]="filtro" />
+    </mat-form-field>
   </div>
+  <div *ngIf="contatosFiltrados().length else listaVazia" class="contatos">
+    <div *ngFor="let contato of contatosFiltrados()">
+      <app-agenda-contato
+        [contato]="contato"
+        (excluirContato)="onExcluirContato($event)"
+        (editarContato)="onEditarContato($event)"
+      ></app-agenda-contato>
+    </div>
+  </div>
+  <ng-template #listaVazia>
+    <div class="msg-lista-vazia">Nenhum contato encontrado.</div>
+  </ng-template>
 </div>

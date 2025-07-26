@@ -1,4 +1,3 @@
-
 .titulo {
   padding: 5rem 0;
   font-size: 5rem;
@@ -15,17 +14,28 @@
     text-align: center;
   }
 
-  .contato {
+  .contatos {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
   }
 }
 
-.divider {
-  width: 65%;
-  // margin: 2rem auto;
-  border: none;
-  border-top: 2px dashed #e4e4e4;
-  opacity: 0.7;
+.filtro {
+  display: flex;
+  justify-content: center;
+  mat-form-field {
+    width: 300px;
+  }
+}
+.msg-lista-vazia{
+  width: 100%;
+  height: 200px;
+  color: rgb(197, 197, 197);
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
 }

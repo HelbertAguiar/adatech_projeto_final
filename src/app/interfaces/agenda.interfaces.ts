@@ -9,4 +9,5 @@ export interface ContatoResponse {
   nome: string;
   telefone?: string | null;
   email?: string | null;
+  foto?: string;
 }

@@ -1,19 +1,34 @@
-<div class="contato">
-  <div class="contato-info">
-    <p><span class="chave-campo">Nome</span>: {{contato.nome}}</p>
-    <p *ngIf="contato.telefone">
-      <span class="chave-campo">Telefone</span>: {{contato.telefone}}
-    </p>
-    <p *ngIf="contato.email">
-      <span class="chave-campo">E-mail</span>: {{contato.email}}
-    </p>
-  </div>
-  <div class="contato-actions">
-    <button matButton="elevated" (click)="editarContato.emit(contato)">
-      Editar
+<mat-card class="contact-card">
+  <mat-card-header>
+    <div mat-card-avatar class="avatar" *ngIf="contato.foto else altAvatar">
+      <img
+        src="https://tse1.mm.bing.net/th/id/OIP.tcjEVfyLxa3MDNDgm3x6HgHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+        alt="{{ contato.nome }}"
+      />
+    </div>
+    <ng-template #altAvatar>
+      <div mat-card-avatar class="alt-avatar">{{contato.nome[0].toUpperCase()}}</div>
+    </ng-template>
+    <mat-card-title>{{ contato.nome }}</mat-card-title>
+    <mat-card-subtitle>{{ contato.telefone }}</mat-card-subtitle>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+      <mat-icon>more_vert</mat-icon>
     </button>
-    <button matButton="elevated" (click)="excluirContato.emit(contato.id)">
-      Excluir
-    </button>
-  </div>
-</div>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="editarContato.emit(contato)">
+        <mat-icon>edit</mat-icon>
+        <span>Editar</span>
+      </button>
+      <button mat-menu-item (click)="excluirContato.emit(contato.id)">
+        <mat-icon>delete</mat-icon>
+        <span>Excluir</span>
+      </button>
+    </mat-menu>
+  </mat-card-header>
+
+  <mat-card-content class="email">
+    <mat-icon>email</mat-icon>
+    <p>{{ contato.email }}</p>
+  </mat-card-content>
+</mat-card>

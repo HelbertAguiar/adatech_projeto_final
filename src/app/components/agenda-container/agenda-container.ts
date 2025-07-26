@@ -1,7 +1,10 @@
 import {
   Component,
+  computed,
+  effect,
   ElementRef,
   inject,
+  OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -24,6 +27,13 @@ export class AgendaContainer {
 
   resetarForm = signal<boolean>(false);
   editMode = signal<boolean>(false);
+
+  filtro = signal('');
+  contatosFiltrados = computed(() =>
+    this.contatos().filter((c) =>
+      c.nome.toLowerCase().includes(this.filtro().toLowerCase())
+    )
+  );
 
   onAdicionarContato(novoContato: ContatoResponse) {
     this.agendaService.addContato(novoContato).subscribe({
