@@ -30,9 +30,11 @@ export class AgendaContainer {
 
   filtro = signal('');
   contatosFiltrados = computed(() =>
-    this.contatos().filter((c) =>
-      c.nome.toLowerCase().includes(this.filtro().toLowerCase())
-    )
+    this.contatos()
+      .filter((c) =>
+        c.nome.toLowerCase().includes(this.filtro().toLowerCase())
+      )
+      .sort((a, b) => a.nome.localeCompare(b.nome))
   );
 
   onAdicionarContato(novoContato: ContatoResponse) {
