@@ -28,8 +28,18 @@ export class AgendaForm {
       nonNullable: true,
       validators: Validators.required,
     }),
-    telefone: new FormControl(''),
-    email: new FormControl(''),
+    telefone: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.pattern(/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/)
+      ]
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.email
+      ]
+    }),
   });
 
   constructor() {
@@ -37,7 +47,12 @@ export class AgendaForm {
       const tarefa = this.contatoSignal();
 
       if (tarefa) {
-        this.contatoForm.patchValue(tarefa);
+        // Corrige campos null para string vazia
+        this.contatoForm.patchValue({
+          nome: tarefa.nome ?? '',
+          telefone: tarefa.telefone ?? '',
+          email: tarefa.email ?? ''
+        });
       } else {
         this.contatoForm.reset();
         Object.keys(this.contatoForm.controls).forEach((key) => {
