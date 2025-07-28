@@ -7,7 +7,7 @@ import {
   Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ContatoResponse } from '../../interfaces/agenda.interfaces';
+import { Contato } from '../../interfaces/agenda.interfaces';
 
 @Component({
   selector: 'app-agenda-form',
@@ -17,10 +17,10 @@ import { ContatoResponse } from '../../interfaces/agenda.interfaces';
 })
 export class AgendaForm {
   @Input() resetarForm = false;
-  @Input() contatoSignal!: Signal<ContatoResponse | null>;
+  @Input() contatoSignal!: Signal<Contato | null>;
 
-  @Output() criarContato = new EventEmitter<ContatoResponse>();
-  @Output() confirmarEdicao = new EventEmitter<ContatoResponse>();
+  @Output() criarContato = new EventEmitter<Contato>();
+  @Output() confirmarEdicao = new EventEmitter<Contato>();
   @Output() cancelarEdicao = new EventEmitter<void>();
 
   contatoForm = new FormGroup({
@@ -55,10 +55,7 @@ export class AgendaForm {
         });
       } else {
         this.contatoForm.reset();
-        Object.keys(this.contatoForm.controls).forEach((key) => {
-          //@ts-ignore
-          this.contatoForm.controls[key].setErrors(null);
-        });
+
       }
     });
   }
@@ -72,10 +69,6 @@ export class AgendaForm {
     };
     this.criarContato.emit(novoContato);
     this.contatoForm.reset();
-    Object.keys(this.contatoForm.controls).forEach((key) => {
-      //@ts-ignore
-      this.contatoForm.controls[key].setErrors(null);
-    });
   }
 
   confirmarEditar() {
@@ -95,6 +88,7 @@ export class AgendaForm {
 
   limparOuCancelar() {
     this.contatoForm.reset();
+    
     if (this.contatoSignal && this.contatoSignal()) {
       this.cancelarEditar();
     }

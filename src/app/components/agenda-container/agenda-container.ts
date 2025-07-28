@@ -1,14 +1,12 @@
 import {
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
-  OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
-import { ContatoResponse } from '../../interfaces/agenda.interfaces';
+import { Contato } from '../../interfaces/agenda.interfaces';
 import { AgendaService } from '../../services/agenda-service';
 
 @Component({
@@ -23,7 +21,7 @@ export class AgendaContainer {
   @ViewChild('form') form!: ElementRef<HTMLDivElement>;
 
   contatos = this.agendaService.contatos;
-  contatoParaEditarSignal = signal<ContatoResponse | null>(null);
+  contatoParaEditarSignal = signal<Contato | null>(null);
 
   resetarForm = signal<boolean>(false);
   editMode = signal<boolean>(false);
@@ -37,7 +35,7 @@ export class AgendaContainer {
       .sort((a, b) => a.nome.localeCompare(b.nome))
   );
 
-  onAdicionarContato(novoContato: ContatoResponse) {
+  onAdicionarContato(novoContato: Contato) {
     this.agendaService.addContato(novoContato).subscribe({
       next: (_) => {
         this.agendaService.refreshDados();
@@ -55,7 +53,7 @@ export class AgendaContainer {
     });
   }
 
-  onEditarContato(contato: ContatoResponse) {
+  onEditarContato(contato: Contato) {
     this.contatoParaEditarSignal.set(contato);
 
     setTimeout(() => {
@@ -66,7 +64,7 @@ export class AgendaContainer {
     });
   }
 
-  onConfirmarEdicao(contato: ContatoResponse) {
+  onConfirmarEdicao(contato: Contato) {
     this.agendaService.updateContato(contato).subscribe({
       next: (_) => {
         this.contatoParaEditarSignal.set(null);

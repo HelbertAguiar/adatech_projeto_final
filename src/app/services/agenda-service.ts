@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Contato, ContatoResponse } from '../interfaces/agenda.interfaces';
+import { Contato } from '../interfaces/agenda.interfaces';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -12,16 +12,16 @@ export class AgendaService {
 
   private readonly urlApi = 'http://localhost:3000/contatos';
 
-  private _contatos = signal<ContatoResponse[]>([]);
+  private _contatos = signal<Contato[]>([]);
   public contatos = this._contatos.asReadonly();
 
   constructor(private toastr: ToastrService) {
     this.refreshDados();
   }
 
-  private getContatos(): Observable<ContatoResponse[]> {
+  private getContatos(): Observable<Contato[]> {
     return this.httpClient
-      .get<ContatoResponse[]>(`${this.urlApi}`)
+      .get<Contato[]>(`${this.urlApi}`)
       .pipe(tap((res) => this._contatos.set(res)));
   }
 
@@ -59,12 +59,9 @@ export class AgendaService {
     return this.httpClient.delete(`${this.urlApi}/${id}`);
   }
 
-  public updateContato(contatoAEditar: ContatoResponse) {
+  public updateContato(contatoAEditar: Contato) {
     return this.httpClient
-      .put<ContatoResponse>(
-        `${this.urlApi}/${contatoAEditar.id}`,
-        contatoAEditar
-      )
+      .put<Contato>(`${this.urlApi}/${contatoAEditar.id}`, contatoAEditar)
       .pipe(
         tap((contatoAEditar) => {
           const next = this._contatos()?.map((contato) =>

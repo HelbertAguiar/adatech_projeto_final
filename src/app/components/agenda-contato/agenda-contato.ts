@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Contato, ContatoResponse } from '../../interfaces/agenda.interfaces';
+import { Contato } from '../../interfaces/agenda.interfaces';
 
 @Component({
   selector: 'app-agenda-contato',
@@ -8,7 +8,7 @@ import { Contato, ContatoResponse } from '../../interfaces/agenda.interfaces';
   styleUrl: './agenda-contato.scss',
 })
 export class AgendaContato {
-  @Input({ required: true }) contato!: ContatoResponse;
+  @Input({ required: true }) contato!: Contato;
   @Output() excluirContato = new EventEmitter<string>();
-  @Output() editarContato = new EventEmitter<ContatoResponse>();
+  @Output() editarContato = new EventEmitter<Contato>();
 }
