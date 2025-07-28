@@ -29,6 +29,10 @@
     >
       {{ contatoSignal() ? 'Editar' : 'Adicionar'}}
     </button>
-    <button matButton="elevated" (click)="cancelarEditar()">Cancelar</button>
+    <button
+      matButton="elevated"
+      type="button"
+      (click)="limparOuCancelar()"
+    >Cancelar</button>
   </div>
 </form>

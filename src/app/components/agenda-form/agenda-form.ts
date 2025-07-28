@@ -92,4 +92,11 @@ export class AgendaForm {
   cancelarEditar() {
     this.cancelarEdicao.emit();
   }
+
+  limparOuCancelar() {
+    this.contatoForm.reset();
+    if (this.contatoSignal && this.contatoSignal()) {
+      this.cancelarEditar();
+    }
+  }
 }
