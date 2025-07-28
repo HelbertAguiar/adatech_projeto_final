@@ -41,6 +41,20 @@
   font-size: 14px;
 }
 
-.email > mat-icon {
+.email>mat-icon {
   font-size: 20px;
+}
+
+.contact-card:hover {
+  color: rgb(35, 117, 166);
+  transform: scale(0.95);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.contact-card:hover mat-card-title,
+.contact-card:hover mat-card-subtitle,
+.contact-card:hover mat-card-content,
+.contact-card:hover mat-icon,
+.contact-card:hover p {
+  color: rgb(35, 117, 166);
 }
