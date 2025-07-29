@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AgendaContainer } from './components/agenda-container/agenda-container';
 import { AgendaForm } from './components/agenda-form/agenda-form';
 import { AgendaContato } from './components/agenda-contato/agenda-contato';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,9 +20,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+
+
+
 
 @NgModule({
-  declarations: [App, AgendaContainer, AgendaForm, AgendaContato],
+  declarations: [App, AgendaContainer, AgendaForm, AgendaContato, ConfirmDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -36,10 +41,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatMenuModule,
     MatPaginatorModule,
     FormsModule,
-    BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(), // ToastrModule added
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    MatDialogModule,
   ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
 })
-export class AppModule {}
+export class AppModule { }

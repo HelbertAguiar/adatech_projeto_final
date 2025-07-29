@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Contato } from '../interfaces/agenda.interfaces';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root',

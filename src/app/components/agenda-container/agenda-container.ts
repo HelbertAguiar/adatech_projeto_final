@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AgendaForm } from '../agenda-form/agenda-form';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-agenda-container',
@@ -50,23 +51,27 @@ export class AgendaContainer {
     ).length;
   }
 
-
-
   onExcluirContato(id: string): void {
-    this.agendaService.deleteContato(id).subscribe({
-      next: () => {
-        this.toast.success('Contato excluído com sucesso!', 'Parabéns', {
-          timeOut: 3000,
-          progressBar: true,
-          progressAnimation: 'decreasing',
-        });
-        this.agendaService.refreshDados();
-      },
-      error: () => {
-        this.toast.error('Erro ao excluir contato!', 'Erro', {
-          timeOut: 3000,
-          progressBar: true,
-          progressAnimation: 'decreasing',
+    const dialogRef = this.dialogService.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((confirmado) => {
+      if (confirmado) {
+        this.agendaService.deleteContato(id).subscribe({
+          next: () => {
+            this.toast.success('Contato excluído com sucesso!', 'Parabéns', {
+              timeOut: 3000,
+              progressBar: true,
+              progressAnimation: 'decreasing',
+            });
+            this.agendaService.refreshDados();
+          },
+          error: () => {
+            this.toast.error('Erro ao excluir contato!', 'Erro', {
+              timeOut: 3000,
+              progressBar: true,
+              progressAnimation: 'decreasing',
+            });
+          }
         });
       }
     });
