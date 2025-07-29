@@ -29,7 +29,7 @@ export class AgendaForm implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { contato?: Contato; isEdicao: boolean }
-  ) {}
+  ) { }
 
   contatoForm = new FormGroup({
     nome: new FormControl('', {
@@ -64,13 +64,22 @@ export class AgendaForm implements OnInit {
       email: this.contatoForm.controls.email.value,
     };
 
-    this.agendaService.addContato(novoContato).subscribe(() => {
-      this.toast.success('Contato adicionado com sucesso!', 'Parabéns', {
-        timeOut: 3000,
-        progressBar: true,
-        progressAnimation: 'decreasing',
-      });
-      this.dialogRef.close();
+    this.agendaService.addContato(novoContato).subscribe({
+      next: () => {
+        this.toast.success('Contato adicionado com sucesso!', 'Parabéns', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+        this.dialogRef.close();
+      },
+      error: () => {
+        this.toast.error('Erro ao adicionar contato!', 'Erro', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+      }
     });
   }
 
@@ -82,13 +91,22 @@ export class AgendaForm implements OnInit {
       telefone: this.contatoForm.controls.telefone.value,
       email: this.contatoForm.controls.email.value,
     };
-    this.agendaService.updateContato(contatoAtualizado).subscribe(() => {
-       this.toast.success('Contato atualizado com sucesso!', 'Parabéns', {
-        timeOut: 3000,
-        progressBar: true,
-        progressAnimation: 'decreasing',
-      });
-      this.dialogRef.close();
+    this.agendaService.updateContato(contatoAtualizado).subscribe({
+      next: () => {
+        this.toast.success('Contato atualizado com sucesso!', 'Parabéns', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+        this.dialogRef.close();
+      },
+      error: () => {
+        this.toast.error('Erro ao atualizar contato!', 'Erro', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+      }
     });
   }
 

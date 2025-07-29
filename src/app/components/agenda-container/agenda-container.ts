@@ -50,16 +50,25 @@ export class AgendaContainer {
     ).length;
   }
 
-  
+
 
   onExcluirContato(id: string): void {
-    this.agendaService.deleteContato(id).subscribe(() => {
-      this.toast.success('Contato excluído com sucesso!', 'Parabéns', {
-        timeOut: 3000,
-        progressBar: true,
-        progressAnimation: 'decreasing',
-      });
-      this.agendaService.refreshDados();
+    this.agendaService.deleteContato(id).subscribe({
+      next: () => {
+        this.toast.success('Contato excluído com sucesso!', 'Parabéns', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+        this.agendaService.refreshDados();
+      },
+      error: () => {
+        this.toast.error('Erro ao excluir contato!', 'Erro', {
+          timeOut: 3000,
+          progressBar: true,
+          progressAnimation: 'decreasing',
+        });
+      }
     });
   }
 
