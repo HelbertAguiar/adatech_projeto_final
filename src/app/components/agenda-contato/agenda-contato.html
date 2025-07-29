@@ -1,10 +1,7 @@
 <mat-card class="contact-card">
   <mat-card-header>
     <div mat-card-avatar class="avatar" *ngIf="contato.foto else altAvatar">
-      <img
-        [src]="contato.foto"
-        alt="{{ contato.nome }}"
-      />
+      <img [src]="contato.foto" alt="{{ contato.nome }}" />
     </div>
     <ng-template #altAvatar>
       <div mat-card-avatar class="alt-avatar">{{contato.nome[0].toUpperCase()}}</div>
@@ -28,7 +25,13 @@
   </mat-card-header>
 
   <mat-card-content class="email">
-    <mat-icon>email</mat-icon>
-    <p>{{ contato.email }}</p>
+    <p>
+      <mat-icon>email</mat-icon>
+      {{ contato.email }}
+    </p>
+    <a mat-icon-button [href]="'https://wa.me/' + contato.telefone" target="_blank" aria-label="WhatsApp">
+      <mat-icon svgIcon="whatsapp"></mat-icon>
+    </a>
   </mat-card-content>
+
 </mat-card>
