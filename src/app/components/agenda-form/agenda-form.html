@@ -1,38 +1,42 @@
-<form class="contato-form" [formGroup]="contatoForm">
-  <mat-form-field appearance="outline">
-    <mat-label>Nome</mat-label>
-    <input matInput type="text" formControlName="nome" />
-    @if (contatoForm.controls.nome.hasError('required') &&
-    contatoForm.controls.nome.touched) {
-    <mat-error>É necessário informar um nome</mat-error>
-    }
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Telefone</mat-label>
-    <input matInput type="tel" formControlName="telefone" />
-    @if (contatoForm.controls.telefone.hasError('pattern')) {
-    <mat-error>Telefone inválido. Ex: (99) 99999-9999</mat-error>
-    }
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>E-mail</mat-label>
-    <input matInput type="email" formControlName="email" />
-    @if (contatoForm.controls.email.hasError('email')) {
-    <mat-error>E-mail inválido</mat-error>
-    }
-  </mat-form-field>
+<div class="modal-content">
+  <h3>{{data.isEdicao ? 'Editar Contato': 'Novo Contato'}}</h3>
 
-  <div class="mat-form-actions">
-    <button
-      matButton="elevated"
-      type="submit"
-      (click)="contatoSignal() ? confirmarEditar() : adicionarContato()"
-      [disabled]="contatoForm.invalid"
-    >
-      {{ contatoSignal() ? 'Editar' : 'Adicionar'}}
-    </button>
-    <button matButton="elevated" type="button" (click)="limparOuCancelar()">
-      Cancelar
-    </button>
-  </div>
-</form>
+  <form class="contato-form" [formGroup]="contatoForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput type="text" formControlName="nome" />
+      @if (contatoForm.controls.nome.hasError('required') &&
+      contatoForm.controls.nome.touched) {
+      <mat-error>É necessário informar um nome</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Telefone</mat-label>
+      <input matInput type="tel" formControlName="telefone" />
+      @if (contatoForm.controls.telefone.hasError('pattern')) {
+      <mat-error>Telefone inválido. Ex: (99) 99999-9999</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" formControlName="email" />
+      @if (contatoForm.controls.email.hasError('email')) {
+      <mat-error>E-mail inválido</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="mat-form-actions">
+      <button
+        matButton="elevated"
+        type="submit"
+        (click)="data.isEdicao ? confirmarEditar() : adicionarContato()"
+        [disabled]="contatoForm.invalid"
+      >
+        {{ data.isEdicao ? 'Salvar' : 'Adicionar'}}
+      </button>
+      <button matButton="elevated" type="button" (click)="limparOuCancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

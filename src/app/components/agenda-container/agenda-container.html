@@ -1,23 +1,19 @@
 <h1 class="titulo">Agenda de contatos</h1>
 
-<div class="agenda-form" #form>
-  <app-agenda-form
-    (criarContato)="onAdicionarContato($event)"
-    [resetarForm]="resetarForm()"
-    [contatoSignal]="contatoParaEditarSignal"
-    (cancelarEdicao)="onCancelarEdicao()"
-    (confirmarEdicao)="onConfirmarEdicao($event)"
-  />
-</div>
-
 <div class="lista-contatos">
-  <h2 class="titulo">Contatos</h2>
-  <div class="filtro">
-    <mat-form-field>
-      <mat-label>Buscar Contato</mat-label>
-      <input matInput type="text" [(ngModel)]="filtro" />
-    </mat-form-field>
-  </div>
+  <mat-card class="header">
+    <div class="filtro">
+      <mat-form-field>
+        <mat-label>Buscar Contato</mat-label>
+        <input matInput type="text" [(ngModel)]="filtro" />
+      </mat-form-field>
+
+      <button class="add-btn" matFab (click)="abrirModalAdd()">
+        <mat-icon>add</mat-icon>
+        Novo Contato
+      </button>
+    </div>
+  </mat-card>
   <div *ngIf="contatosFiltrados().length else listaVazia" class="contatos">
     <div *ngFor="let contato of contatosFiltrados()">
       <app-agenda-contato

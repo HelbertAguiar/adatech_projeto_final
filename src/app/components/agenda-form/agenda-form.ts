@@ -2,12 +2,18 @@ import {
   Component,
   effect,
   EventEmitter,
+  Inject,
+  inject,
   Input,
+  OnInit,
   Output,
   Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Contato } from '../../interfaces/agenda.interfaces';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AgendaService } from '../../services/agenda-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-agenda-form',
@@ -15,13 +21,15 @@ import { Contato } from '../../interfaces/agenda.interfaces';
   templateUrl: './agenda-form.html',
   styleUrl: './agenda-form.scss',
 })
-export class AgendaForm {
-  @Input() resetarForm = false;
-  @Input() contatoSignal!: Signal<Contato | null>;
+export class AgendaForm implements OnInit {
+  readonly dialogRef = inject(MatDialogRef<AgendaForm>);
+  readonly agendaService = inject(AgendaService);
+  readonly toast = inject(ToastrService);
 
-  @Output() criarContato = new EventEmitter<Contato>();
-  @Output() confirmarEdicao = new EventEmitter<Contato>();
-  @Output() cancelarEdicao = new EventEmitter<void>();
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: { contato?: Contato; isEdicao: boolean }
+  ) {}
 
   contatoForm = new FormGroup({
     nome: new FormControl('', {
@@ -30,34 +38,22 @@ export class AgendaForm {
     }),
     telefone: new FormControl('', {
       nonNullable: true,
-      validators: [
-        Validators.pattern(/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/)
-      ]
+      validators: [Validators.pattern(/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/)],
     }),
     email: new FormControl('', {
       nonNullable: true,
-      validators: [
-        Validators.email
-      ]
+      validators: [Validators.email],
     }),
   });
 
-  constructor() {
-    effect(() => {
-      const tarefa = this.contatoSignal();
-
-      if (tarefa) {
-        // Corrige campos null para string vazia
-        this.contatoForm.patchValue({
-          nome: tarefa.nome ?? '',
-          telefone: tarefa.telefone ?? '',
-          email: tarefa.email ?? ''
-        });
-      } else {
-        this.contatoForm.reset();
-
-      }
-    });
+  ngOnInit(): void {
+    if (this.data.contato) {
+      this.contatoForm.patchValue({
+        nome: this.data.contato.nome ?? '',
+        telefone: this.data.contato.telefone ?? '',
+        email: this.data.contato.email ?? '',
+      });
+    }
   }
 
   adicionarContato() {
@@ -67,30 +63,41 @@ export class AgendaForm {
       telefone: this.contatoForm.controls.telefone.value,
       email: this.contatoForm.controls.email.value,
     };
-    this.criarContato.emit(novoContato);
-    this.contatoForm.reset();
+
+    this.agendaService.addContato(novoContato).subscribe(() => {
+      this.toast.success('Contato adicionado com sucesso!', 'Parabéns', {
+        timeOut: 3000,
+        progressBar: true,
+        progressAnimation: 'decreasing',
+      });
+      this.dialogRef.close();
+    });
   }
 
   confirmarEditar() {
     if (this.contatoForm.invalid) return;
     const contatoAtualizado = {
-      id: this.contatoSignal()?.id,
+      id: this.data.contato?.id,
       nome: this.contatoForm.controls.nome.value,
       telefone: this.contatoForm.controls.telefone.value,
       email: this.contatoForm.controls.email.value,
     };
-    this.confirmarEdicao.emit(contatoAtualizado);
+    this.agendaService.updateContato(contatoAtualizado).subscribe(() => {
+       this.toast.success('Contato atualizado com sucesso!', 'Parabéns', {
+        timeOut: 3000,
+        progressBar: true,
+        progressAnimation: 'decreasing',
+      });
+      this.dialogRef.close();
+    });
   }
 
   cancelarEditar() {
-    this.cancelarEdicao.emit();
+    this.contatoForm.reset();
+    this.dialogRef.close();
   }
 
   limparOuCancelar() {
-    this.contatoForm.reset();
-    
-    if (this.contatoSignal && this.contatoSignal()) {
-      this.cancelarEditar();
-    }
+    this.dialogRef.close();
   }
 }

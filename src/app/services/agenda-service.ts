@@ -30,29 +30,7 @@ export class AgendaService {
   }
 
   public addContato(novoContato: Contato): Observable<Contato> {
-    const status_add = this.httpClient.post<Contato>(
-      `${this.urlApi}`,
-      novoContato
-    );
-
-    if (status_add) {
-      this.toastr.success('Contato adicionado com sucesso!', 'Parabéns', {
-        timeOut: 3000,
-        progressBar: true,
-        progressAnimation: 'decreasing',
-      });
-    } else {
-      this.toastr.error(
-        'Não foi possivel incluir tarefa. Tente mais tarde!',
-        'Atenção',
-        {
-          timeOut: 3000,
-          progressBar: true,
-          progressAnimation: 'decreasing',
-        }
-      );
-    }
-    return status_add;
+    return this.httpClient.post<Contato>(`${this.urlApi}`, novoContato);
   }
 
   public deleteContato(id: string) {

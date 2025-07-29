@@ -3,13 +3,15 @@
   display: flex;
   justify-content: center;
 }
+.modal-content{
+  padding: 15px;
+}
 
 .contato-form {
-  background-color: rgb(233, 233, 233);
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50%;
+  width: 400px;
   padding: 2rem 1rem 1rem 1rem;
   border-radius: 1rem;
   gap: 1rem;
