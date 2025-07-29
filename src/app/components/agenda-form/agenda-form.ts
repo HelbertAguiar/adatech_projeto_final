@@ -26,6 +26,8 @@ export class AgendaForm implements OnInit {
   readonly agendaService = inject(AgendaService);
   readonly toast = inject(ToastrService);
 
+  isLoading = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { contato?: Contato; isEdicao: boolean }
@@ -58,6 +60,7 @@ export class AgendaForm implements OnInit {
 
   adicionarContato() {
     if (this.contatoForm.invalid) return;
+    this.isLoading = true;
     const novoContato = {
       nome: this.contatoForm.controls.nome.value,
       telefone: this.contatoForm.controls.telefone.value,
@@ -72,6 +75,7 @@ export class AgendaForm implements OnInit {
           progressAnimation: 'decreasing',
         });
         this.dialogRef.close();
+        this.isLoading = false;
       },
       error: () => {
         this.toast.error('Erro ao adicionar contato!', 'Erro', {
@@ -79,12 +83,14 @@ export class AgendaForm implements OnInit {
           progressBar: true,
           progressAnimation: 'decreasing',
         });
+        this.isLoading = false;
       }
     });
   }
 
   confirmarEditar() {
     if (this.contatoForm.invalid) return;
+    this.isLoading = true;
     const contatoAtualizado = {
       id: this.data.contato?.id,
       nome: this.contatoForm.controls.nome.value,
@@ -99,6 +105,7 @@ export class AgendaForm implements OnInit {
           progressAnimation: 'decreasing',
         });
         this.dialogRef.close();
+        this.isLoading = false;
       },
       error: () => {
         this.toast.error('Erro ao atualizar contato!', 'Erro', {
@@ -106,6 +113,7 @@ export class AgendaForm implements OnInit {
           progressBar: true,
           progressAnimation: 'decreasing',
         });
+        this.isLoading = false;
       }
     });
   }
