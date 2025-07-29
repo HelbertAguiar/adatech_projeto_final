@@ -5,25 +5,51 @@
     <div class="filtro">
       <mat-form-field>
         <mat-label>Buscar Contato</mat-label>
-        <input matInput type="text" [(ngModel)]="filtro" />
+        <input
+          matInput
+          type="text"
+          [value]="filtro()"
+          (input)="filtro.set($any($event.target).value); currentPage.set(0)"
+        />
       </mat-form-field>
 
-      <button class="add-btn" matFab (click)="abrirModalAdd()">
+      <button class="add-btn" mat-fab (click)="abrirModalAdd()">
         <mat-icon>add</mat-icon>
         Novo Contato
       </button>
     </div>
   </mat-card>
-  <div *ngIf="contatosFiltrados().length else listaVazia" class="contatos">
-    <div *ngFor="let contato of contatosFiltrados()">
+
+  <div
+    *ngIf="contatosFiltradosPaginados().length > 0; else listaVazia"
+    class="contatos"
+  >
+    <div *ngFor="let contato of contatosFiltradosPaginados()">
       <app-agenda-contato
         [contato]="contato"
         (excluirContato)="onExcluirContato($event)"
         (editarContato)="onEditarContato($event)"
-      ></app-agenda-contato>
+      >
+      </app-agenda-contato>
     </div>
   </div>
+
   <ng-template #listaVazia>
     <div class="msg-lista-vazia">Nenhum contato encontrado.</div>
   </ng-template>
 </div>
+
+<mat-card>
+  <div class="paginacao" *ngIf="totalFiltrados > 5">
+    <mat-paginator
+      [length]="totalFiltrados"
+      [pageSize]="pageSize()"
+      [pageIndex]="currentPage()"
+      [pageSizeOptions]="[15, 30, 50]"
+      showFirstLastButtons
+      aria-label="Selecione a página"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
+  </div>
+</mat-card>

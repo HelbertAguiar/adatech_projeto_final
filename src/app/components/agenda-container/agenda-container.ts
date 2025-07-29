@@ -12,6 +12,7 @@ import { AgendaService } from '../../services/agenda-service';
 import { MatDialog } from '@angular/material/dialog';
 import { AgendaForm } from '../agenda-form/agenda-form';
 import { ToastrService } from 'ngx-toastr';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-agenda-container',
@@ -25,23 +26,35 @@ export class AgendaContainer {
   private readonly toast = inject(ToastrService);
 
   @ViewChild('form') form!: ElementRef<HTMLDivElement>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
 
   contatos = this.agendaService.contatos;
-  contatoParaEditarSignal = signal<Contato | null>(null);
-
-  resetarForm = signal<boolean>(false);
-  editMode = signal<boolean>(false);
-
   filtro = signal('');
-  contatosFiltrados = computed(() =>
-    this.contatos()
-      .filter((c) => c.nome.toLowerCase().includes(this.filtro().toLowerCase()))
-      .sort((a, b) => a.nome.localeCompare(b.nome))
-  );
+  pageSize = signal(15);
+  currentPage = signal(0);
 
-  onExcluirContato(id: string) {
+  contatosFiltradosPaginados = computed(() => {
+    const all = this.contatos()
+      .filter((c) => c.nome.toLowerCase().includes(this.filtro().toLowerCase()))
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+
+    const start = this.currentPage() * this.pageSize();
+    const end = start + this.pageSize();
+    return all.slice(start, end);
+  });
+
+  get totalFiltrados(): number {
+    return this.contatos().filter((c) =>
+      c.nome.toLowerCase().includes(this.filtro().toLowerCase())
+    ).length;
+  }
+
+  
+
+  onExcluirContato(id: string): void {
     this.agendaService.deleteContato(id).subscribe(() => {
-      this.toast.success('Contato excluido com sucesso!', 'Parabéns', {
+      this.toast.success('Contato excluído com sucesso!', 'Parabéns', {
         timeOut: 3000,
         progressBar: true,
         progressAnimation: 'decreasing',
@@ -50,25 +63,28 @@ export class AgendaContainer {
     });
   }
 
-  onEditarContato(contato: Contato) {
+  onEditarContato(contato: Contato): void {
     const ref = this.dialogService.open(AgendaForm, {
-      data: { contato: contato, isEdicao: true },
+      data: { contato, isEdicao: true },
     });
+
     ref.afterClosed().subscribe(() => {
       this.agendaService.refreshDados();
     });
-  }
-
-  onCancelarEdicao() {
-    this.contatoParaEditarSignal.set(null);
   }
 
   abrirModalAdd(): void {
     const ref = this.dialogService.open(AgendaForm, {
       data: { isEdicao: false },
     });
+
     ref.afterClosed().subscribe(() => {
       this.agendaService.refreshDados();
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
   }
 }

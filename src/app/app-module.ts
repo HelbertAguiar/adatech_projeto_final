@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [App, AgendaContainer, AgendaForm, AgendaContato],
@@ -33,6 +34,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatIconModule,
     MatCardModule,
     MatMenuModule,
+    MatPaginatorModule,
     FormsModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
