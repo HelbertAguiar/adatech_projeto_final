@@ -1,0 +1,38 @@
+# ────────────────────────────────────
+# 1) Dependências comuns (cacheável)
+# ────────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci
+
+# ────────────────────────────────────
+# 2) Alvo DEV  ➜  hot reload
+# ────────────────────────────────────
+FROM deps AS dev
+WORKDIR /app
+COPY . .
+ENV \
+  NG_CLI_ANALYTICS=false \
+  CHOKIDAR_USEPOLLING=1 \          
+  CHOKIDAR_INTERVAL=1000 \
+  HOST=0.0.0.0
+EXPOSE 4200
+CMD ["npm","run","start","--","--host","0.0.0.0","--poll","1000","--live-reload","true"]
+
+# ────────────────────────────────────
+# 3) Alvo PROD ➜  build + Nginx
+# ────────────────────────────────────
+FROM deps AS build
+COPY . .
+RUN npx ng build --configuration production
+
+FROM nginx:1.27.0-alpine AS prod
+RUN rm /etc/nginx/conf.d/default.conf
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+ARG DIST_PATH=grupo-1-agenda
+COPY --from=build /app/dist/$DIST_PATH /usr/share/nginx/html
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://127.0.0.1 || exit 1
+USER nginx

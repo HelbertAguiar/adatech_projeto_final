@@ -1,0 +1,43 @@
+services:
+  # ─────────────── API (json‑server) ───────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: agenda_api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mock-api:/app/mock-api          # reflete db.json em tempo real
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:3000/contatos"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - backend
+
+  # ─────────────── Front‑end DEV (Angular) ───────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      target: dev                         # usa o stage DEV que roda `ng serve`
+    container_name: agenda_web
+    depends_on:
+      api:
+        condition: service_healthy        # só inicia após API ficar healthy
+    ports:
+      - "4200:4200"                       # ng serve
+    volumes:
+      - ./:/app                           # código‑fonte → contêiner
+      - /app/node_modules                 # mantém node_modules dentro do contêiner
+    environment:
+      CHOKIDAR_USEPOLLING: "1"            # garante detecção de alterações
+      CHOKIDAR_INTERVAL: "1000"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
