@@ -4,6 +4,8 @@ import { Observable, tap } from 'rxjs';
 import { Contato } from '../interfaces/agenda.interfaces';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class AgendaService {
   private httpClient = inject(HttpClient);
 
-  private readonly urlApi = 'http://localhost:3000/contatos';
+  // private readonly urlApi = 'https://projeto-api.mangorock-0c2bb493.eastus.azurecontainerapps.io/contatos'
+  private readonly urlApi = environment.apiUrl;
 
   private _contatos = signal<Contato[]>([]);
   public contatos = this._contatos.asReadonly();

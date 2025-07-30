@@ -1,0 +1,52 @@
+name: CI/CD - Angular + API
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Login no Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login no ACR
+        run: az acr login --name projetoacr123
+
+      - name: Build e Push da API
+        run: |
+          docker build -f Dockerfile.api -t projetoacr123.azurecr.io/api:latest .
+          docker push projetoacr123.azurecr.io/api:latest
+          az containerapp update \
+            --name projeto-api \
+            --resource-group projeto-final-rg \
+            --image projetoacr123.azurecr.io/api:latest
+
+      - name: Aguardar API ficar disponível
+        run: |
+          echo "Esperando API subir..."
+          for i in {1..30}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" https://projeto-api.mangorock-0c2bb493.eastus.azurecontainerapps.io/contatos)
+            echo "Status: $status"
+            if [ "$status" = "200" ]; then
+              echo "API está pronta!"
+              break
+            fi
+            sleep 10
+          done
+
+      - name: Build e Push do Frontend
+        run: |
+          docker build -f Dockerfile.web -t projetoacr123.azurecr.io/web:latest .
+          docker push projetoacr123.azurecr.io/web:latest
+          az containerapp update \
+            --name projeto-web \
+            --resource-group projeto-final-rg \
+            --image projetoacr123.azurecr.io/web:latest
