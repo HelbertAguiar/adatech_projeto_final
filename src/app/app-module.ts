@@ -21,6 +21,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 
@@ -44,6 +46,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     MatDialogModule,
+    MatTooltipModule,
   ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],

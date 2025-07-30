@@ -62,3 +62,29 @@
 a {
   margin-top: -25px;
 }
+
+.linha-texto {
+  display: flex;
+  align-items: center;
+}
+
+.icone-inline {
+  font-size: 1.5rem;
+  vertical-align: center;
+}
+
+.icone-whatsapp {
+  display: inline-flex;
+  align-items: baseline;
+  margin-left: 5px;
+  vertical-align: text-bottom;
+  text-decoration: none;
+}
+
+.icone-whatsapp mat-icon {
+  width: 20px;
+  height: 100%;
+  font-size: 20px;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}

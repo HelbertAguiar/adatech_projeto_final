@@ -1,13 +1,8 @@
 import {
   Component,
-  effect,
-  EventEmitter,
   Inject,
   inject,
-  Input,
   OnInit,
-  Output,
-  Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Contato } from '../../interfaces/agenda.interfaces';
