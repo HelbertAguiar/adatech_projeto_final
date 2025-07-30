@@ -1,13 +1,21 @@
-name: CI/CD - Angular + API
+name: Deploy no Azure
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
+env:
+  REGISTRY_NAME: projetoacr123.azurecr.io
+  API_IMAGE_NAME: api
+  WEB_IMAGE_NAME: web
+  RESOURCE_GROUP: projeto-final-rg
+  API_APP_NAME: projeto-api
+  WEB_APP_NAME: projeto-web
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -18,35 +26,30 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login no ACR
-        run: az acr login --name projetoacr123
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login $REGISTRY_NAME \
+            -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
 
+      - name: Gerar TAG única baseada no SHA
+        id: tagger
+        run: echo "sha_tag=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      # API
       - name: Build e Push da API
         run: |
-          docker build -f Dockerfile.api -t projetoacr123.azurecr.io/api:latest .
-          docker push projetoacr123.azurecr.io/api:latest
+          docker build --no-cache -t $REGISTRY_NAME/$API_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }} -f Dockerfile.api .
+          docker push $REGISTRY_NAME/$API_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }}
           az containerapp update \
-            --name projeto-api \
-            --resource-group projeto-final-rg \
-            --image projetoacr123.azurecr.io/api:latest
+            --name $API_APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --image $REGISTRY_NAME/$API_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }}
 
-      - name: Aguardar API ficar disponível
+      # Web
+      - name: Build e Push do Frontend Angular
         run: |
-          echo "Esperando API subir..."
-          for i in {1..30}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" https://projeto-api.mangorock-0c2bb493.eastus.azurecontainerapps.io/contatos)
-            echo "Status: $status"
-            if [ "$status" = "200" ]; then
-              echo "API está pronta!"
-              break
-            fi
-            sleep 10
-          done
-
-      - name: Build e Push do Frontend
-        run: |
-          docker build -f Dockerfile.web -t projetoacr123.azurecr.io/web:latest .
-          docker push projetoacr123.azurecr.io/web:latest
+          docker build --no-cache -t $REGISTRY_NAME/$WEB_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }} -f Dockerfile.web .
+          docker push $REGISTRY_NAME/$WEB_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }}
           az containerapp update \
-            --name projeto-web \
-            --resource-group projeto-final-rg \
-            --image projetoacr123.azurecr.io/web:latest
+            --name $WEB_APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --image $REGISTRY_NAME/$WEB_IMAGE_NAME:${{ steps.tagger.outputs.sha_tag }}
